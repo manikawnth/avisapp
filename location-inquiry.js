@@ -6,7 +6,7 @@ const SERVICE = 'FindLocationsByKeyword';
 */
 
 function LocationInquiry(location) {
-
+    console.log(location);
     /* Old end-point code
     let request = {
         "requestHeader": {

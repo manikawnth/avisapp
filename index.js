@@ -12,10 +12,10 @@ skill.launch(function (request, response) {
 });
 
 skill.intent("LocationInquiryIntent", {
-  "slots": { "location": "AMAZON.US_CITY" },
+  "slots": { "location": "AMAZON.US_CITY"},
 
   "utterances": [
-    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {around|at|to} {-|location}"
+    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}"
   ]
 },
   function (request, response) {
@@ -42,5 +42,5 @@ skill.error = function(err, request, response){
 }
 
 //console.log(skill.schema());
-//console.log(skill.utterances());
+console.log(skill.utterances());
 exports.handler = skill.lambda();
