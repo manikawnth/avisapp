@@ -80,6 +80,8 @@ function LocationInquiry(location) {
                 resolve(suggestions);
             }
             else {
+                console.log("No locations");
+                console.log(resp);
                 reject("Locations not present");
             }
         }, (err) => {

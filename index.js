@@ -15,7 +15,7 @@ skill.intent("LocationInquiryIntent", {
   "slots": { "location": "AMAZON.US_CITY" },
 
   "utterances": [
-    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {around|at|to} {-|location|zip}"
+    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {around|at|to} {-|location}"
   ]
 },
   function (request, response) {
@@ -41,6 +41,6 @@ skill.error = function(err, request, response){
   return response.say(msg).send();
 }
 
-console.log(skill.schema());
-console.log(skill.utterances());
+//console.log(skill.schema());
+//console.log(skill.utterances());
 exports.handler = skill.lambda();
