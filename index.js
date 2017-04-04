@@ -12,14 +12,50 @@ skill.launch(function (request, response) {
 });
 
 skill.intent("LocationInquiryIntent", {
-  "slots": { "location": "AMAZON.US_CITY"},
+  "slots": { "location": "AMAZON.US_CITY", "zip": "AMAZON.NUMBER"},
 
   "utterances": [
+    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|zip}",
     "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}"
   ]
 },
   function (request, response) {
-    var location = request.slot('location');
+    let inlocation = request.slot('location');
+    let zip = request.slot('zip');
+    console.log("inlocation " + inlocation);
+    console.log("zip " + zip);
+    let location = inlocation || zip;
+    console.log("location " + location);
+    const session = request.getSession();
+    const breakTime = `<break time="1s" />`;
+    return li(location)
+      .then((suggestions) => {
+        console.log("came to mains");
+        let text = '';
+        for (let each_location of suggestions) {
+          text = text + each_location + breakTime;
+        }
+        response.say(text).send();
+      })
+  }
+);
+
+
+skill.intent("VehicleAvailabilityIntent", {
+  "slots": { "location": "AMAZON.US_CITY", "fromDate": "AMAZON.DATE", "toDate": "AMAZON.DATE"},
+
+  "utterances": [
+    "{|get|find|availability of} some {vehicles|cars} {|to} {|rent|book} at {-|location} {from|for the dates} {-|fromDate} {to|till} {-|toDate}"
+  ]
+},
+  function (request, response) {
+    let location = request.slot('location');
+    let fromDate = request.slot('fromDate');
+    let toDate = request.slot('toDate');
+    console.log("location " + inlocation);
+    console.log("fromDate " + fromDate);
+    console.log("toDate " + toDate);
+    
     const session = request.getSession();
     const breakTime = `<break time="1s" />`;
     return li(location)
@@ -41,6 +77,6 @@ skill.error = function(err, request, response){
   return response.say(msg).send();
 }
 
-//console.log(skill.schema());
+console.log(skill.schema());
 console.log(skill.utterances());
 exports.handler = skill.lambda();
