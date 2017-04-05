@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const moment = require('moment');
 
 function VehicleAvailability(location, fromDate, toDate){
     const END_POINT = `https://qaservices.carrental.com/mobileapi/avis/qa/v2/reservation/vehicles`
@@ -44,7 +45,11 @@ function VehicleAvailability(location, fromDate, toDate){
     request.reservationDetails.pickupLocationCode = location;
     request.reservationDetails.returnLocationCode = location;
 
+    fromDate = moment(fromDate).format().slice(0,10);
     request.reservationDetails.pickupDateTime = fromDate + "T10:00:00";
+    if(!toDate){
+        toDate = moment(fromDate).add(1,'d').format().slice(0,10);
+    }
     request.reservationDetails.returnDateTime = toDate + "T10:00:00";
     console.log(request);
 

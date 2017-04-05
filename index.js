@@ -1,6 +1,5 @@
 const alexa = require('alexa-app');
 const rp = require('request-promise');
-const moment = require('moment');
 const li = require('./location-inquiry');
 const va = require('./vehicle-availability');
 
@@ -22,6 +21,7 @@ skill.intent("LocationInquiryIntent", {
   ]
 },
   function (request, response) {
+    console.log("Handler: LocationInquiryIntent");
     let inlocation = request.slot('location');
     let zip = request.slot('zip');
     console.log("inlocation " + inlocation);
@@ -51,11 +51,12 @@ skill.intent("ResponseIntent",
     ]
 },
 function(request,response){
+  console.log("Handler: ResponseIntent");
   const session = request.getSession();
   const location = request.slot('location');
   const respDate = request.slot('respDate');
   const breakTime = `<break time="700ms" />`;
-
+  console.log(request);
   if(location){
     return li(location, true)
     .then((locations)=>{
@@ -67,7 +68,21 @@ function(request,response){
     })
   }
   else if(respDate){
-    response.say("The date is " + respDate);
+    session.set('lastPrompt', 'pickup date');
+    const breakTime = `<break time="500ms" />`;
+    const medBreakTime = `<break time="700ms" />`;
+    let code = session.get('location').code;
+    return va(code, respDate)
+    .then((vehicles)=>{
+      response.say("The following are the available vehicles and their approximate rental charges per day are");
+      response.say(medBreakTime);
+        for (let vehicle of vehicles){
+          let speech = vehicle.name + ', ' + Math.round(vehicle.amount) + 'USD';
+          response.say(speech).say(breakTime);
+        }
+    }, (errMsg)=>{
+      response.say(errMsg).send();
+    })
   }
   
 })
@@ -85,7 +100,7 @@ function(request,response){
   console.log("Checking availability");
   const session = request.getSession();
   session.set('currentIntent', 'va');
-  session.set('lastprompt', 'location');
+  session.set('lastPrompt', 'location');
   response.say("What's the pickup location?").shouldEndSession(false);;
 })
 
