@@ -1,5 +1,6 @@
 const li = require('../services/location-inquiry');
 const va = require('../services/vehicle-availability');
+const locIntent = require('./location-intent');
 
 function ResponseIntent(request, response) {
   console.log("Handler: ResponseIntent");
@@ -7,17 +8,19 @@ function ResponseIntent(request, response) {
   const inlocation = request.slot('location');
   const state = request.slot('state');
   const zip = request.slot('zip');
+  const airport = request.slot('airport');
   const respDate = request.slot('respDate');
   const breakTime = `<break time="700ms" />`;
   console.log(request.data.request.intent);
   
   if (!respDate) {
+    /*
     let location;
     if(zip){
       location = zip;
     }
     else{
-      let location = state ? (inlocation + ' ' + state) : inlocation;
+      location = state ? (inlocation + ' ' + state) : inlocation;
     }
     return li(location, true)
       .then((locations) => {
@@ -27,6 +30,8 @@ function ResponseIntent(request, response) {
       }, (err) => {
         response.say("I'm sorry. The requested location not found");
       })
+      */
+    return locIntent(request,response);
   }
   else{
     session.set('lastPrompt', 'pickup date');
@@ -35,8 +40,9 @@ function ResponseIntent(request, response) {
     let code = session.get('location').code;
     return va(code, respDate)
       .then((vehicles) => {
-        response.say("The following are the available vehicles and their approximate rental charges per day are");
-        response.say(medBreakTime);
+        response.say("The following are the available vehicles ")
+        .say("with their approximate charges per day")        
+        .say(medBreakTime);
         for (let vehicle of vehicles) {
           let speech = vehicle.name + ', ' + Math.round(vehicle.amount) + 'USD';
           response.say(speech).say(breakTime);

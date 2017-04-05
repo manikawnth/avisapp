@@ -51,9 +51,10 @@ skill.intent("LocationInquiryIntent", {
 */
 skill.intent("ResponseIntent",
   {
-    "slots": { "respDate": "AMAZON.DATE", "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER" },
+    "slots": { "respDate": "AMAZON.DATE", "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER", "airport" : "AMAZON.Airport" },
     "utterances": [
       "{-|respDate}",
+      "{-|airport}",
       "{-|location}",
       "{-|location} {-|state}",
       "{-|zip}"
@@ -63,10 +64,11 @@ skill.intent("ResponseIntent",
 
 skill.intent("LocationIntent",
   {
-    "slots": { "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER" },
+    "slots": { "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER" , "airport" : "AMAZON.Airport"},
     "utterances": [
       "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|zip}",
-      "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}"
+      "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}",
+      "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|airport}"
     ]
   },
   locationIntentHandler);
@@ -75,9 +77,14 @@ skill.intent("AvailabilityIntent",
   {
     "slots": {},
     "utterances": [
-      "looking for some vehicles",
-      "prices of the cars",
-      "availability of {cars|vehicles}"
+      "looking for some {cars|vehicles}",
+      "prices of the {cars|vehicles}",
+      "list of {cars|vehicles}",
+      "availability of {cars|vehicles}",
+      "{cars|vehicles} availability",
+      "prices",
+      "{cars|vehicles}",
+      "availability"
     ]
   },
   availabilityIntentHandler);

@@ -1,10 +1,14 @@
+const li = require('../services/location-inquiry');
+
 function LocationIntent(request, response) {
   console.log("Handler: LocationInquiryIntent");
   let inlocation = request.slot('location');
+  const state = request.slot('state');
   let zip = request.slot('zip');
-  console.log("inlocation " + inlocation);
-  console.log("zip " + zip);
-  let location = inlocation || zip;
+  let airport = request.slot('airport');
+
+  inlocation = state ? (inlocation + ' ' + state) : inlocation;
+  let location = inlocation || zip || airport;
   console.log("location " + location);
   const session = request.getSession();
   const breakTime = `<break time="1s" />`;
