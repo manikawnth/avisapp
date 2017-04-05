@@ -43,7 +43,7 @@ function LocationInquiry(location, codesOnly) {
 
     //New end point code starts
     const inlocation = location.split(' ').join('%20')
-    const END_POINT = `https://qaservices.carrental.com/mobileapi/avis/qa/v2/locations?keyword=${inlocation}`
+    const END_POINT = `https://qaservices.carrental.com/mobileapi/qa/v2/locations?keyword=${inlocation}`
     let options = {
         method: 'GET',
         uri: END_POINT,

@@ -2,7 +2,7 @@ const rp = require('request-promise');
 const moment = require('moment');
 
 function VehicleAvailability(location, fromDate, toDate){
-    const END_POINT = `https://qaservices.carrental.com/mobileapi/avis/qa/v2/reservation/vehicles`
+    const END_POINT = `https://qaservices.carrental.com/mobileapi/qa/v2/reservation/vehicles`
     let request = {
         "reservationDetails": {
             "pickupLocationCode": "EWR",
