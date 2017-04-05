@@ -5,7 +5,7 @@ const END_POINT = 'https://mqa.avis.com/mobileapi/v2/request';
 const SERVICE = 'FindLocationsByKeyword';
 */
 
-function LocationInquiry(location) {
+function LocationInquiry(location, codesOnly) {
     console.log(location);
     /* Old end-point code
     let request = {
@@ -69,11 +69,18 @@ function LocationInquiry(location) {
                 const loc_len = resp.locations.length > 3 ? 3 : resp.locations.length;
                 const suggestions = [];
                 for (let i = 0; i < loc_len; i++) {
-                    if (locations[i].name) {
-                        suggestions.push(locations[i].name);
+                    if(codesOnly){
+                        if(locations[i].name && locations[i].code){
+                            suggestions.push(locations[i].code);
+                        }
                     }
-                    else {
-                        suggestions.push(locations[i].code);
+                    else{
+                        if (locations[i].name) {
+                            suggestions.push(locations[i].name);
+                        }
+                        else {
+                            suggestions.push(locations[i].code);
+                        }
                     }
                 }
                 console.log(suggestions);
@@ -86,7 +93,7 @@ function LocationInquiry(location) {
             }
         }, (err) => {
             console.log("Error in location inquiry");
-            reject(err);
+            reject("Some uknown error occured");
         });
     })
     console.log("Returning promise");

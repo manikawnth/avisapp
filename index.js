@@ -45,19 +45,24 @@ skill.intent("VehicleAvailabilityIntent", {
   "slots": { "location": "AMAZON.US_CITY", "fromDate": "AMAZON.DATE", "toDate": "AMAZON.DATE"},
 
   "utterances": [
-    "{|get|find|availability of} some {vehicles|cars} {|to} {|rent|book} at {-|location} {from|for the dates} {-|fromDate} {to|till} {-|toDate}"
+    "looking for {|some} {vehicles|cars} at {-|location} {from|for the dates} {-|fromDate} {to|till} {-|toDate}",
+    "availability of {vehicles|cars} at {-|location} {from|for the dates} {-|fromDate} {to|till} {-|toDate}",
+    "find {|some} {vehicles|cars} at {-|location} {from|for the dates} {-|fromDate} {to|till} {-|toDate}"
   ]
 },
   function (request, response) {
     let location = request.slot('location');
     let fromDate = request.slot('fromDate');
     let toDate = request.slot('toDate');
-    console.log("location " + inlocation);
+    console.log("location " + location);
     console.log("fromDate " + fromDate);
     console.log("toDate " + toDate);
     
     const session = request.getSession();
     const breakTime = `<break time="1s" />`;
+
+    response.say(location).say(breakTime).say(fromDate).say(breakTime).say(toDate);
+    /*
     return li(location)
       .then((suggestions) => {
         console.log("came to mains");
@@ -67,6 +72,7 @@ skill.intent("VehicleAvailabilityIntent", {
         }
         response.say(text).send();
       })
+      */
   }
 );
 
