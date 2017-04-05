@@ -5,6 +5,7 @@ const va = require('./services/vehicle-availability');
 
 const availabilityIntentHandler = require('./handlers/availability-intent');
 const responseIntentHandler = require('./handlers/response-intent');
+const locationIntentHandler = require('./handlers/location-intent');
 
 const skill = new alexa.app("AvisApp");
 
@@ -15,12 +16,15 @@ skill.launch(function (request, response) {
   response.say(shout).shouldEndSession(false);
 });
 
+/*
 skill.intent("LocationInquiryIntent", {
-  "slots": { "location": "AMAZON.US_CITY", "zip": "AMAZON.NUMBER"},
+  "slots": { "location": "AMAZON.US_CITY", "zip": "AMAZON.NUMBER", "state" : "AMAZON.US_STATE"},
 
   "utterances": [
     "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|zip}",
-    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}"
+    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}",
+     "{-|location}",
+     "{-|location} {-|state}",
   ]
 },
   function (request, response) {
@@ -44,28 +48,39 @@ skill.intent("LocationInquiryIntent", {
       })
   }
 );
-
-skill.intent("ResponseIntent", 
-{
-  "slots" : {"location" : "AMAZON.US_CITY", "respDate" : "AMAZON.DATE", "state" : "AMAZON.US_STATE"},
-  "utterances" : [
-    "{-|location}",
-    "{-|location} {-|state}",
-    "{-|respDate}"
+*/
+skill.intent("ResponseIntent",
+  {
+    "slots": { "respDate": "AMAZON.DATE", "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER" },
+    "utterances": [
+      "{-|respDate}",
+      "{-|location}",
+      "{-|location} {-|state}",
+      "{-|zip}"
     ]
-},
-responseIntentHandler);
+  },
+  responseIntentHandler);
 
-skill.intent("AvailabilityIntent", 
-{
-  "slots" : {},
-  "utterances" : [
-    "looking for some vehicles",
-    "prices of the cars",
-    "availability of {cars|vehicles}"
-  ]
-},
-availabilityIntentHandler);
+skill.intent("LocationIntent",
+  {
+    "slots": { "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER" },
+    "utterances": [
+      "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|zip}",
+      "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}"
+    ]
+  },
+  locationIntentHandler);
+
+skill.intent("AvailabilityIntent",
+  {
+    "slots": {},
+    "utterances": [
+      "looking for some vehicles",
+      "prices of the cars",
+      "availability of {cars|vehicles}"
+    ]
+  },
+  availabilityIntentHandler);
 
 /*
 skill.intent("VehicleAvailabilityIntent", {

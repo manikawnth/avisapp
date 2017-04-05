@@ -6,11 +6,19 @@ function ResponseIntent(request, response) {
   const session = request.getSession();
   const inlocation = request.slot('location');
   const state = request.slot('state');
+  const zip = request.slot('zip');
   const respDate = request.slot('respDate');
   const breakTime = `<break time="700ms" />`;
   console.log(request.data.request.intent);
-  if (inlocation) {
-    let location = state ? (inlocation + ' ' + state) : inlocation;
+  
+  if (!respDate) {
+    let location;
+    if(zip){
+      location = zip;
+    }
+    else{
+      let location = state ? (inlocation + ' ' + state) : inlocation;
+    }
     return li(location, true)
       .then((locations) => {
         session.set('location', locations[0]);
@@ -20,7 +28,7 @@ function ResponseIntent(request, response) {
         response.say("I'm sorry. The requested location not found");
       })
   }
-  else if (respDate) {
+  else{
     session.set('lastPrompt', 'pickup date');
     const breakTime = `<break time="500ms" />`;
     const medBreakTime = `<break time="700ms" />`;
