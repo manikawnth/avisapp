@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "alexa-app": "4.0.0",
+    "moment": "2.18.1",
     "request-promise": "4.2.0"
   }
 }

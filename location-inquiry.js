@@ -71,7 +71,10 @@ function LocationInquiry(location, codesOnly) {
                 for (let i = 0; i < loc_len; i++) {
                     if(codesOnly){
                         if(locations[i].name && locations[i].code){
-                            suggestions.push(locations[i].code);
+                            let doc = {}
+                            doc.name = locations[i].name;
+                            doc.code = locations[i].code;
+                            suggestions.push(doc);
                         }
                     }
                     else{

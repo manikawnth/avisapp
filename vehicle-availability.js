@@ -46,18 +46,22 @@ function VehicleAvailability(location, fromDate, toDate){
 
     request.reservationDetails.pickupDateTime = fromDate + "T10:00:00";
     request.reservationDetails.returnDateTime = toDate + "T10:00:00";
-
+    console.log(request);
 
     const promise = new Promise((resolve, reject)=>{
         rp(options)
         .then((resp)=>{
+            console.log(resp);
             let available_vehicles = [];
             if(resp.responseInfo.success && resp.vehicleList.length > 0){
                 for (each_vehicle_category of resp.vehicleList){
                     if(each_vehicle_category.vehicles.length > 0){
                         let vehicles = each_vehicle_category.vehicles;
                         for (vehicle of vehicles){
-                            available_vehicles[vehicle.basicDetails.name] = vehicle.payLaterRateInfo.amount;
+                            let doc = {};
+                            doc.name = vehicle.basicDetails.name;
+                            doc.amount = vehicle.payLaterRateInfo.amount;
+                            available_vehicles.push(doc);
                         }
                     }
                 }
@@ -66,7 +70,7 @@ function VehicleAvailability(location, fromDate, toDate){
             }
             else{
                 console.log("Available vehicles rejected");
-                reject(errorMessage);
+                reject(resp.responseInfo.errorMessage);
             }
         },(err)=>{
             console.log("Available vehicles rejected under catch");
