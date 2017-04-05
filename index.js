@@ -1,7 +1,10 @@
 const alexa = require('alexa-app');
 const rp = require('request-promise');
-const li = require('./location-inquiry');
-const va = require('./vehicle-availability');
+const li = require('./services/location-inquiry');
+const va = require('./services/vehicle-availability');
+
+const availabilityIntentHandler = require('./handlers/availability-intent');
+const responseIntentHandler = require('./handlers/response-intent');
 
 const skill = new alexa.app("AvisApp");
 
@@ -51,44 +54,7 @@ skill.intent("ResponseIntent",
     "{-|respDate}"
     ]
 },
-function(request,response){
-  console.log("Handler: ResponseIntent");
-  const session = request.getSession();
-  const inlocation = request.slot('location');
-  const state = request.slot('state');
-  const respDate = request.slot('respDate');
-  const breakTime = `<break time="700ms" />`;
-  console.log(request.data.request.intent);
-  if(inlocation){
-    let location = state ? (inlocation + ' ' + state) : inlocation;
-    return li(location, true)
-    .then((locations)=>{
-      session.set('location',locations[0]);
-      response.say("The closest location is, ").say(locations[0].name).say(breakTime)
-      .say("What's the pickup date you are looking for?").shouldEndSession(false);
-    },(err)=>{
-      response.say("I'm sorry. The requested location not found");
-    })
-  }
-  else if(respDate){
-    session.set('lastPrompt', 'pickup date');
-    const breakTime = `<break time="500ms" />`;
-    const medBreakTime = `<break time="700ms" />`;
-    let code = session.get('location').code;
-    return va(code, respDate)
-    .then((vehicles)=>{
-      response.say("The following are the available vehicles and their approximate rental charges per day are");
-      response.say(medBreakTime);
-        for (let vehicle of vehicles){
-          let speech = vehicle.name + ', ' + Math.round(vehicle.amount) + 'USD';
-          response.say(speech).say(breakTime);
-        }
-    }, (errMsg)=>{
-      response.say(errMsg).send();
-    })
-  }
-  
-})
+responseIntentHandler);
 
 skill.intent("AvailabilityIntent", 
 {
@@ -99,13 +65,7 @@ skill.intent("AvailabilityIntent",
     "availability of {cars|vehicles}"
   ]
 },
-function(request,response){
-  console.log("Checking availability");
-  const session = request.getSession();
-  session.set('currentIntent', 'va');
-  session.set('lastPrompt', 'location');
-  response.say("What's the pickup location?").shouldEndSession(false);;
-})
+availabilityIntentHandler);
 
 /*
 skill.intent("VehicleAvailabilityIntent", {
@@ -157,6 +117,6 @@ skill.error = function(err, request, response){
 }
 */
 
-//console.log(skill.schema());
-//console.log(skill.utterances());
+console.log(skill.schema());
+console.log(skill.utterances());
 exports.handler = skill.lambda();
