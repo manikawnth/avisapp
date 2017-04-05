@@ -44,20 +44,23 @@ skill.intent("LocationInquiryIntent", {
 
 skill.intent("ResponseIntent", 
 {
-  "slots" : {"location" : "AMAZON.US_CITY", "respDate" : "AMAZON.DATE"},
+  "slots" : {"location" : "AMAZON.US_CITY", "respDate" : "AMAZON.DATE", "state" : "AMAZON.US_STATE"},
   "utterances" : [
     "{-|location}",
+    "{-|location} {-|state}",
     "{-|respDate}"
     ]
 },
 function(request,response){
   console.log("Handler: ResponseIntent");
   const session = request.getSession();
-  const location = request.slot('location');
+  const inlocation = request.slot('location');
+  const state = request.slot('state');
   const respDate = request.slot('respDate');
   const breakTime = `<break time="700ms" />`;
-  console.log(request);
-  if(location){
+  console.log(request.data.request.intent);
+  if(inlocation){
+    let location = state ? (inlocation + ' ' + state) : inlocation;
     return li(location, true)
     .then((locations)=>{
       session.set('location',locations[0]);
@@ -145,14 +148,15 @@ skill.intent("VehicleAvailabilityIntent", {
     
   }
 );
-*/
+
 skill.error = function(err, request, response){
   console.log("Inside skill error function");
   const session = request.getSession();
   let msg = session.get('abendMsg');
   return response.say(msg).send();
 }
+*/
 
-console.log(skill.schema());
-console.log(skill.utterances());
+//console.log(skill.schema());
+//console.log(skill.utterances());
 exports.handler = skill.lambda();
