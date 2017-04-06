@@ -12,36 +12,31 @@ function ResponseIntent(request, response) {
   const respDate = request.slot('respDate');
   const breakTime = `<break time="700ms" />`;
   console.log(request.data.request.intent);
+
+  const currentPromptMsg = session.get('currentPromptMsg');
+  const currentPrompt = session.get('currentPrompt');
   
   if (!respDate) {
-    /*
-    let location;
-    if(zip){
-      location = zip;
-    }
-    else{
-      location = state ? (inlocation + ' ' + state) : inlocation;
-    }
-    return li(location, true)
-      .then((locations) => {
-        session.set('location', locations[0]);
-        response.say("The closest location is, ").say(locations[0].name).say(breakTime)
-          .say("What's the pickup date you are looking for?").shouldEndSession(false);
-      }, (err) => {
-        response.say("I'm sorry. The requested location not found");
-      })
-      */
     return locIntent(request,response);
   }
-  else{
-    session.set('lastPrompt', 'pickup date');
+  else if(respDate){
     const breakTime = `<break time="500ms" />`;
     const medBreakTime = `<break time="700ms" />`;
-    let code = session.get('location').code;
-    return va(code, respDate)
+    let code = session.get('location').code;    
+    if( currentPrompt == 'fromDate'){
+      session.set('fromDate', respDate);
+      let msg = "When do you plan to return?";
+      session.set('currentPromptMsg', msg);
+      session.set('currentPrompt', 'toDate');
+      return response.say(msg).shouldEndSession(false);
+    }
+    else if(currentPrompt == 'toDate'){
+      session.set('toDate', respDate);
+      let fromDate = session.get('fromDate');
+      return va(code, fromDate ,respDate)
       .then((vehicles) => {
         response.say("The following are the available vehicles ")
-        .say("with their approximate charges per day")        
+        .say("with their approximate rental charges")        
         .say(medBreakTime);
         for (let vehicle of vehicles) {
           let speech = vehicle.name + ', ' + Math.round(vehicle.amount) + 'USD';
@@ -50,6 +45,11 @@ function ResponseIntent(request, response) {
       }, (errMsg) => {
         response.say(errMsg).send();
       })
+    }
+    
+  }
+  else{
+    //TO - DO
   }
 }
 module.exports = ResponseIntent;

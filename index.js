@@ -16,39 +16,6 @@ skill.launch(function (request, response) {
   response.say(shout).shouldEndSession(false);
 });
 
-/*
-skill.intent("LocationInquiryIntent", {
-  "slots": { "location": "AMAZON.US_CITY", "zip": "AMAZON.NUMBER", "state" : "AMAZON.US_STATE"},
-
-  "utterances": [
-    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|zip}",
-    "{nearest|closest} {avis|rental|avis rental|car rental} {locations|counters|stations} {|near|around|at|to} {-|location}",
-     "{-|location}",
-     "{-|location} {-|state}",
-  ]
-},
-  function (request, response) {
-    console.log("Handler: LocationInquiryIntent");
-    let inlocation = request.slot('location');
-    let zip = request.slot('zip');
-    console.log("inlocation " + inlocation);
-    console.log("zip " + zip);
-    let location = inlocation || zip;
-    console.log("location " + location);
-    const session = request.getSession();
-    const breakTime = `<break time="1s" />`;
-    return li(location)
-      .then((suggestions) => {
-        console.log("came to mains");
-        let text = '';
-        for (let each_location of suggestions) {
-          text = text + each_location + breakTime;
-        }
-        response.say(text).send();
-      })
-  }
-);
-*/
 skill.intent("ResponseIntent",
   {
     "slots": { "respDate": "AMAZON.DATE", "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER", "airport" : "AMAZON.Airport" },
@@ -77,8 +44,11 @@ skill.intent("AvailabilityIntent",
   {
     "slots": {},
     "utterances": [
-      "looking for some {cars|vehicles}",
+      "looking for {a|some} {cars|vehicles}",
       "prices of the {cars|vehicles}",
+      "find a {car|vehicle} {|for me}",
+      "get me a {|rental} {car|vehicle}",
+      "need a {|rental} {car|vehicle}",
       "list of {cars|vehicles}",
       "availability of {cars|vehicles}",
       "{cars|vehicles} availability",

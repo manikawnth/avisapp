@@ -12,15 +12,26 @@ function LocationIntent(request, response) {
   console.log("location " + location);
   const session = request.getSession();
   const breakTime = `<break time="1s" />`;
+  const smallBreakTime = `<break time="500ms" />`;
 
-  if ((session.get('currentIntent') == 'va') && (session.get('lastPrompt') == 'location')) {
+  const currentPromptMsg = session.get('currentPromptMsg');
+  const currentPrompt = session.get('currentPrompt');
+  const currentIntent = session.get('currentIntent');
+
+  if ((currentIntent == 'va') && (currentPrompt == 'location')) {
     return li(location, true)
       .then((locations) => {
-        session.set('location', locations[0]);
+        const msg = "What's the pickup date you are looking for?";
+        session.set('location',locations[0]);
+        session.set('currentPrompt','fromDate');
+        session.set('currentPromptMsg',msg);
         response.say("The closest location is, ").say(locations[0].name).say(breakTime)
-          .say("What's the pickup date you are looking for?").shouldEndSession(false);
-      }, (err) => {
-        response.say("I'm sorry. The requested location is not found");
+          .say(msg).shouldEndSession(false);
+      }, (err) => {        
+        response.say("I'm sorry. The requested location is not found")
+        .say(smallBreakTime)
+        .say(currentPromptMsg).shouldEndSession(false);
+
       })
   }
   else{
