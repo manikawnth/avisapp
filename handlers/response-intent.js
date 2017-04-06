@@ -42,6 +42,9 @@ function ResponseIntent(request, response) {
           let speech = vehicle.name + ', ' + Math.round(vehicle.amount) + 'USD';
           response.say(speech).say(breakTime);
         }
+        session.clear();
+        response.say("Please ask if you have any other questions or just say NO to quit the session")
+        .shouldEndSession(false);
       }, (errMsg) => {
         response.say(errMsg).send();
       })

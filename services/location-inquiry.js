@@ -87,7 +87,8 @@ function LocationInquiry(location, codesOnly) {
                     }
                 }
                 console.log(suggestions);
-                resolve(suggestions);
+                if (suggestions.length > 0) resolve(suggestions);
+                else reject("Location not present");
             }
             else {
                 console.log("No locations");

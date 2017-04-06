@@ -16,6 +16,35 @@ skill.launch(function (request, response) {
   response.say(shout).shouldEndSession(false);
 });
 
+skill.intent("AMAZON.NoIntent",
+{
+  "slots" : {},
+  "utterances" : [
+    "No",
+    "No thanks"
+  ]
+},
+function(request, response){
+  response.say("Find out more at avis.com. Goodbye.");
+})
+
+skill.intent("AMAZON.StopIntent",
+{
+  "slots" : {},
+  "utterances" : [
+    "stop it",
+    "quit",
+    "enough",
+    "bye",
+    "good bye",
+    "tata"
+
+  ]
+},
+function(request, response){
+  response.say("Find out more at avis.com. Goodbye.");
+})
+
 skill.intent("ResponseIntent",
   {
     "slots": { "respDate": "AMAZON.DATE", "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER", "airport" : "AMAZON.Airport" },
