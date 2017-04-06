@@ -45,6 +45,19 @@ function(request, response){
   response.say("Find out more at avis.com. Goodbye.");
 })
 
+skill.intent("GreetIntent",
+{
+  "slots" : {},
+  "utterances" : [
+    "{|Hey|Hi} we {got|have} {big audience|large crowd} {|here} {behave yourself|behave|be good}",
+    "we {have|got} a big day today {|so|remember} be good"
+  ]
+},
+function(request, response){
+  console.log("Inside Greet intent");
+  response.say("Ohh Boy! Get your part right and rest will be good").shouldEndSession(false);
+})
+
 skill.intent("ResponseIntent",
   {
     "slots": { "respDate": "AMAZON.DATE", "location": "AMAZON.US_CITY", "state": "AMAZON.US_STATE", "zip": "AMAZON.NUMBER", "airport" : "AMAZON.Airport" },
@@ -73,7 +86,8 @@ skill.intent("AvailabilityIntent",
   {
     "slots": {},
     "utterances": [
-      "looking for {a|some} {cars|vehicles}",
+      "{|okay} {|Let's} {rent|book} a {car|vehicle}",
+      "{looking for|look up} {a|some} {cars|vehicles}",
       "prices of the {cars|vehicles}",
       "find a {car|vehicle} {|for me}",
       "get me a {|rental} {car|vehicle}",

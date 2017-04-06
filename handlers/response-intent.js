@@ -38,7 +38,13 @@ function ResponseIntent(request, response) {
         response.say("The following are the available vehicles ")
         .say("with their approximate rental charges")        
         .say(medBreakTime);
-        for (let vehicle of vehicles) {
+        session.set('currentPrompt', 'vehicleReadout');
+        const len = vehicles.length > 5 ? 5:vehicles.length;
+        const session_vehicles = vehicles.slice(0,len);
+        session.set('vehicles', session_vehicles);
+
+        //for (let vehicle of vehicles) {
+        for (let vehicle of session_vehicles) {
           let speech = vehicle.name + ', ' + Math.round(vehicle.amount) + 'USD';
           response.say(speech).say(breakTime);
         }
